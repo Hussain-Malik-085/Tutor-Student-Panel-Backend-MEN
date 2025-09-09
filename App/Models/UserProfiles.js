@@ -9,7 +9,7 @@ const userProfileSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    required: true
+    required: false
   },
   experience: {
     type: String,

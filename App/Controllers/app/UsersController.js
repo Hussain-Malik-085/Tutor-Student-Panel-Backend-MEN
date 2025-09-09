@@ -4,6 +4,8 @@ const UserProfiles = require('../../Models/UserProfiles');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const fs = require('fs');
+
 
 //---------------------------------------------------------//
 
@@ -35,13 +37,6 @@ Email: Email,
 Password: hashedPassword
    })
 
-//Here is working with JWT
-   
-    // let token = jwt.sign({ email: Email }, process.env.JWT_SECRET);
-    // console.log(token);
-    // res.cookie("token", token, {httpOnly: true});
-    // console.log("Cookie Set"); 
-
 
 user.save().then(() => {
 
@@ -55,9 +50,6 @@ res.send({status: 0, Messege: "Data not saved in Mongo",error:err});
 
 })
 }
-
-
-
 
 //---------------------------------------------------------//
 
@@ -147,41 +139,34 @@ res.send({status: 0, Messege: "About us Data not saved",error:err});
 //---------------------------------------------------------// 
 
 let uploadProfilePicture = async (req, res) => {
-console.log(req.file);
+    try {
+        const photopath = req.file ? req.file.path : null;
+        let UserId = req.user.id;
 
-}
-//   try {
-//     let UserId = req.user.id;
-//     console.log("UserId from JWT:", UserId);
-//     console.log("File received:", req.file);
+        // 1️⃣ Check if user already has a profile
+        let existingProfile = await UserProfiles.findOne({ userId: UserId });
 
-//     if (!req.file) {
-//       return res.status(400).json({ status: 0, message: "No file uploaded" });
-//     }
+        // 2️⃣ If old picture exists, delete it from uploads
+        if (existingProfile && existingProfile.picture) {
+            fs.unlink(existingProfile.picture, (err) => {
+                if (err) console.log("Error deleting old image:", err);
+                else console.log("Old image deleted:", existingProfile.picture);
+            });
+        }
 
-//     let imagePath = `/uploads/${req.file.filename}`; // ✅ sirf /uploads rakho
-//     console.log("Generated imagePath:", imagePath);
-
-//     let profile = await UserProfiles.findOneAndUpdate(
-//       { userId: UserId },
-//       { picture: imagePath },
-//       { new: true, upsert: true }
-//     );
-
-//     console.log("Updated profile:", profile);
-
-//     res.send({ status: 1, message: "Profile picture saved successfully", data: profile ,
-//       imageUrl: `${req.protocol}://${req.get('host')}${imagePath}` // Full URL
-
-//     });
-//   } catch (err) {
-//     console.error("Error while uploading profile pic:", err);
-//     res.send({ status: 0, message: "Profile picture not saved", error: err });
-//   }
-// };
-
-
-
+        // 3️⃣ Update profile with new picture
+        let profile = await UserProfiles.findOneAndUpdate(
+            { userId: UserId },
+            { picture: photopath },
+            { new: true, upsert: true }
+        );
+       console.log("New Picture Added:", profile.picture);
+        res.json({ status: 1, message: "Profile Picture Uploaded", data: profile });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 0, message: "Error uploading picture", error: err });
+    }
+};
 
 //---------------------------------------------------------//
 
