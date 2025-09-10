@@ -1,5 +1,5 @@
 let express = require ("express");
-const { usersInsert,userLogin, userProfile, uploadProfilePicture } = require ("../../Controllers/app/UsersController");
+const { usersInsert,userLogin, userProfile, uploadProfilePicture ,getProfile} = require ("../../Controllers/app/UsersController");
 let UserRouter = express.Router();
 
 
@@ -17,7 +17,8 @@ UserRouter.post("/CreateProfileAboutUs", auth, userProfile);
 UserRouter.post("/ProfilePicture", auth , upload.single('profilePicture'), uploadProfilePicture);
 
 
-
+// GET profile (JWT auth required)
+UserRouter.get('/GetProfile', auth, getProfile);
 
 
 module.exports = UserRouter;
