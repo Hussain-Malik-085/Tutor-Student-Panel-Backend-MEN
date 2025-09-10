@@ -15,11 +15,6 @@ const UserRouter = require("./App/Routes/app/UsersRoutes");
 app.use("/app", UserRouter);
 
 
-// const path = require("path");
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
-
 
 // Connect to MongoDB and start the server on port
 mongoose.connect(process.env.DBURL).then(() => {
