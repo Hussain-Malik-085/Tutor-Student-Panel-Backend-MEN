@@ -1,27 +1,43 @@
 let express = require ("express");
-const { usersInsert,userLogin, userProfile, uploadProfilePicture ,getProfile} = require ("../../Controllers/app/UsersController");
-const { EducationReceive } = require ("../../Controllers/app/EducationController");
+const { usersInsert,userLogin, userProfile, uploadProfilePicture ,getProfile,getProfilePic} = require ("../../Controllers/app/UsersController");
+const { EducationReceive,getEducationData } = require ("../../Controllers/app/EducationController");
 let UserRouter = express.Router();
 
 
 const upload = require('../../Middlewares/multer');
 const auth = require('../../Middlewares/auth');
 
-
+//------------------ Signup ------------------//
 
 UserRouter.post("/register", usersInsert);
 
+
+//------------------ Login ------------------//
+
 UserRouter.post("/login", userLogin);
+
+
+
+//------------------ Create About US Profile ------------------//
 
 UserRouter.post("/CreateProfileAboutUs", auth, userProfile);
 
+UserRouter.get('/GetProfile', auth, getProfile);
+
+
+
+//-----------------------------------------// Profile Picture Routes
+
 UserRouter.post("/ProfilePicture", auth , upload.single('profilePicture'), uploadProfilePicture);
 
-UserRouter.post("/CreateEducation", auth , EducationReceive);
+UserRouter.get("/GetProfilePic", auth, getProfilePic);
 
 
-// GET profile (JWT auth required)
-UserRouter.get('/GetProfile', auth, getProfile);
+//------------------------------------------// Education Routes
+UserRouter.post("/CreateEducation", auth ,upload.single('certificate'), EducationReceive);
+
+UserRouter.get("/GetEducation", auth, getEducationData);
+
 
 
 module.exports = UserRouter;

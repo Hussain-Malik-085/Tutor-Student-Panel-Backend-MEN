@@ -35,10 +35,10 @@ const educationSchema = new mongoose.Schema({
       message: "End date cannot be earlier than start date.",
     },
   },
-  // certificateUrl: {
-  //   type: String, // file path ya cloud URL
-  //   default: null,
-  // },
+  certificateUrl: {
+    type: String, // file path ya cloud URL
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
