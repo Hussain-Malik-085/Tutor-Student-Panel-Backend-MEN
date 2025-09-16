@@ -3,6 +3,7 @@ const Users = require('../../Models/Users');
 const UserProfiles = require('../../Models/UserProfiles');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const admin = require('firebase-admin'); // ✅ Add this import
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
@@ -79,7 +80,7 @@ let userLogin = async (req, res) => {
       return res.status(401).json({ status: 0, message: "Password not match" });
     }
     // Password match ho gaya, JWT token generate karo
-let token = jwt.sign({id: user._id, email: user.Email },  process.env.JWT_SECRET,{ expiresIn: '1h' });
+let token = jwt.sign({id: user._id, email: user.Email },  process.env.JWT_SECRET,{ expiresIn: '7d' });
     console.log(token);
     res.cookie("token", token, {httpOnly: true});
     console.log("Cookie Set");
@@ -104,6 +105,79 @@ let token = jwt.sign({id: user._id, email: user.Email },  process.env.JWT_SECRET
 };
 
 //---------------------------------------------------------//
+
+//Firebase login controller
+let firebaseLogin = async (req, res) => {
+  try {
+    const idToken = req.headers.authorization?.split(" ")[1];
+    if (!idToken) {
+      return res.status(401).json({ status: 0, message: "No Firebase token provided" });
+    }
+
+    // Step 1: Firebase se verify karo
+    const decoded = await admin.auth().verifyIdToken(idToken);
+
+    // Step 2: MongoDB me user find/update
+    let user = await Users.findOne({ Email: decoded.email });
+
+    if (!user) {
+      user = new Users({
+        Username: decoded.name || decoded.email.split("@")[0],
+        Email: decoded.email,
+        firebaseUid: decoded.uid,
+        provider: "google",
+        photoURL: decoded.picture
+      });
+      await user.save();
+    } else {
+      // Update existing user with Firebase info if needed
+      user.lastLogin = new Date();
+      if (!user.firebaseUid) {
+        user.firebaseUid = decoded.uid;
+        user.provider = "google";
+      }
+      if (decoded.picture && !user.photoURL) {
+        user.photoURL = decoded.picture;
+      }
+      await user.save();
+    }
+
+    // Step 3: Apna JWT generate karo
+    const token = jwt.sign(
+      { id: user._id, email: user.Email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    
+    console.log("Firebase login token:", token);
+    res.cookie("token", token, {httpOnly: true});
+    console.log("Cookie Set for Firebase user");
+
+    res.json({
+      status: 1,
+      message: "Firebase login successful",
+      token,
+      data: {
+        _id: user._id,
+        Username: user.Username,
+        Email: user.Email,
+        provider: user.provider,
+        photoURL: user.photoURL
+      }
+    });
+  } catch (err) {
+    console.error("Firebase login error:", err);
+    res.status(401).json({ status: 0, message: "Invalid Firebase token", error: err.message });
+  }
+};
+
+
+
+
+
+//---------------------------------------------------------//
+
+
 
 // Create your profile api after login CREATE PROFILE SCREEN
 let userProfile = async (req, res) => {
@@ -294,5 +368,6 @@ module.exports = {
     userProfile,
     uploadProfilePicture,
     getProfile,
-    getProfilePic
+    getProfilePic,
+    firebaseLogin
 }

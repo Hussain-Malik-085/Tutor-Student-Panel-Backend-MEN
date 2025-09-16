@@ -1,5 +1,5 @@
 let express = require ("express");
-const { usersInsert,userLogin, userProfile, uploadProfilePicture ,getProfile,getProfilePic} = require ("../../Controllers/app/UsersController");
+const { usersInsert,userLogin, userProfile, uploadProfilePicture ,getProfile,getProfilePic,firebaseLogin} = require ("../../Controllers/app/UsersController");
 const { EducationReceive,getEducationData } = require ("../../Controllers/app/EducationController");
 let UserRouter = express.Router();
 
@@ -16,6 +16,10 @@ UserRouter.post("/register", usersInsert);
 
 UserRouter.post("/login", userLogin);
 
+
+//------------------ Firebase Login ------------------//
+
+UserRouter.post("/firebase-login", firebaseLogin);
 
 
 //------------------ Create About US Profile ------------------//

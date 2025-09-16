@@ -6,6 +6,16 @@ const path = require("path");
 require("dotenv").config();
 let app = express();
 
+
+const admin = require("firebase-admin");
+const serviceAccount = require(process.env.FIREBASE_KEY_PATH); 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
+
+
 // Middleware setup
 app.use(cors());
 app.use(express.json());
