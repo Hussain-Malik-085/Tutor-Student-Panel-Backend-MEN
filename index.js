@@ -24,10 +24,32 @@ app.use(express.urlencoded({ extended: true }));
 // ✅ Serve uploads folder statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const UserRouter = require("./App/Routes/app/UsersRoutes");
+const authRouter = require("./App/routes/authRoute");
+app.use("/app", authRouter);
 
-// ✅ Routes
-app.use("/app", UserRouter);
+
+
+//Tutor Router Rotes
+const aboutusRouter = require("./App/routes/teacherRoutes/aboutusRoute");
+app.use("/app/tutor", aboutusRouter);
+
+const pictureRouter = require("./App/routes/teacherRoutes/profilepictureRoute.js");
+app.use("/app/tutor", pictureRouter);
+
+const educationRouter = require("./App/routes/teacherRoutes/educationRoute.js");
+app.use("/app/tutor", educationRouter);
+
+const descriptionRouter = require("./App/routes/teacherRoutes/descriptionRoute.js");
+app.use("/app/tutor", descriptionRouter);
+
+
+
+//Student Router Rotes
+const BasicInfoRoutes = require("./App/routes/studentRoutes/basicinfoRoutes")
+app.use("/app/student",BasicInfoRoutes)
+
+
+
 
 // ✅ Connect to MongoDB and start the server
 mongoose.connect(process.env.DBURL)

@@ -1,52 +1,40 @@
 let mongoose = require('mongoose');
-//let Schema = mongoose.Schema;
 
-
-const educationSchema = new mongoose.Schema({
+const descriptionSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",   // yahan Users schema ka naam dena hai
     required: true
   },
-  university: {
+  introduction: {
     type: String,
     required: true,
     trim: true,
   },
-  degree: {
+  teaching: {
     type: String,
     required: true,
     trim: true,
   },
-  specialization: {
+  motivation: {
     type: String,
+    required: true,
     trim: true,
   },
-  startDate: {
-    type: Date,
+  headline: {
+    type: String,
     required: true,
+    trim: true,
   },
-  endDate: {
-    type: Date,
-    validate: {
-      validator: function (value) {
-        return value >= this.startDate; // end date start se pehle na ho
-      },
-      message: "End date cannot be earlier than start date.",
-    },
-  },
-  certificateUrl: {
-    type: String, // file path ya cloud URL
-    default: null,
-  },
+  
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-let EducationModel = mongoose.model('Education', educationSchema);
-module.exports = EducationModel;
+let DescriptionModel = mongoose.model('Description', descriptionSchema);
+module.exports = DescriptionModel;
 
 
 
