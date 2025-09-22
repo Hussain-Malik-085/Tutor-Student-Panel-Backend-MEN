@@ -2,10 +2,8 @@
 
 
 //const Users = require('../Models/Users');
-const UserProfiles = require('../../Models/teacherModels/AboutUsData');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const admin = require('firebase-admin'); // ✅ Add this import
+const StudentPhoto = require('../../Models/studentModels/BasicInfo');
+
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
@@ -22,12 +20,12 @@ let uploadProfilePicture = async (req, res) => {
             photopath = `uploads/${req.file.filename}`;  // Relative path for DB
             console.log("Generated relative path for profile:", photopath);
         // 1️⃣ Check if user already has a profile
-        let existingProfile = await UserProfiles.findOne({ userId: UserId });
+        let existingProfile = await StudentPhoto.findOne({ userId: UserId });
 
         // 2️⃣ If old picture exists, delete it from uploads
-        if (existingProfile && existingProfile.picture) {
+        if (existingProfile && existingProfile.photoURL) {
           // Convert old relative/full path to full absolute path
-                const oldFilename = path.basename(existingProfile.picture);  // Sirf filename extract
+                const oldFilename = path.basename(existingProfile.photoURL);  // Sirf filename extract
                 const fullOldPath = path.join(__dirname, '..', '..', '..', 'uploads', oldFilename);  // Extra '..' for App folder (tumhare structure pe adjust)
                 
                 console.log("Attempting to delete old profile pic at:", fullOldPath);  // Optional debug
@@ -38,12 +36,12 @@ let uploadProfilePicture = async (req, res) => {
         }
 
         // 3️⃣ Update profile with new picture
-        let profile = await UserProfiles.findOneAndUpdate(
+        let profile = await StudentPhoto.findOneAndUpdate(
             { userId: UserId },
-            { picture: photopath },
+            { photoURL: photopath },
             { new: true, upsert: true }
         );
-       console.log("New Picture Added:", profile.picture);
+       console.log("New Picture Added:", profile.photoURL);
         // Generate full URL for response
         const fullPictureUrl = `http://127.0.0.1:8020/${photopath}`;
         
@@ -73,15 +71,15 @@ let uploadProfilePicture = async (req, res) => {
 const getProfilePic = async (req, res) => {
   try {
     let userId = req.user.id;
-    let profile = await UserProfiles.findOne({ userId: userId });
+    let profile = await StudentPhoto.findOne({ userId: userId });
     
     if (!profile) {
       return res.json({ status: 0, message: "No profile found", data: null });
     }
     
     let fullPictureUrl = "";
-    if (profile.picture) {
-      let cleanPath = profile.picture.replace(/^\/+/, '');
+    if (profile.photoURL) {
+      let cleanPath = profile.photoURL.replace(/^\/+/, '');
       fullPictureUrl = `http://127.0.0.1:8020/${cleanPath}`;
     }
       console.log("Retrieved profile picture URL:", fullPictureUrl);

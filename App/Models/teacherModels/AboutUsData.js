@@ -45,7 +45,7 @@ const userProfileSchema = new mongoose.Schema({
 });
 
 
-let UserProfileModel = mongoose.model('UserProfiles', userProfileSchema);
+let UserProfileModel = mongoose.model('TeacherAboutUS', userProfileSchema);
 module.exports = UserProfileModel;
 
 

@@ -50,6 +50,12 @@ app.use("/app/tutor", descriptionRouter);
 const BasicInfoRoutes = require("./App/routes/studentRoutes/basicinfoRoutes")
 app.use("/app/student",BasicInfoRoutes)
 
+const StudentpictureRouter = require("./App/routes/studentRoutes/ProfilePicRoute")
+app.use("/app/student",StudentpictureRouter);
+
+const  AcademicInfoRoutes = require("./App/routes/studentRoutes/academicinfoRoutes.js")
+app.use("/app/student", AcademicInfoRoutes )
+
 
 
 

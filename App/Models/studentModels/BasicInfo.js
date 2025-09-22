@@ -6,9 +6,14 @@ const BasicInfoSchema = new mongoose.Schema({
   email: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   age: { type: String, required: true },
+  photoURL: {
+        type: String,
+        required: false,
+        trim : true 
+    },
   dob: { type: Date, required: true },
 }, { timestamps: true });
 
-module.exports = mongoose.model("BasicInfo", BasicInfoSchema );
+module.exports = mongoose.model("StudentBasicInfo", BasicInfoSchema );
 
 

@@ -1,7 +1,7 @@
 
 
 //const Users = require('../Models/Users');
-const UserProfiles = require('../../Models/teacherModels/UserProfiles');
+const UserProfiles = require('../../Models/teacherModels/AboutUsData');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const admin = require('firebase-admin'); // ✅ Add this import

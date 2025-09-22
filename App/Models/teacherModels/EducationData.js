@@ -46,7 +46,7 @@ const educationSchema = new mongoose.Schema({
   },
 });
 
-let EducationModel = mongoose.model('Education', educationSchema);
+let EducationModel = mongoose.model('TeacherEducation', educationSchema);
 module.exports = EducationModel;
 
 

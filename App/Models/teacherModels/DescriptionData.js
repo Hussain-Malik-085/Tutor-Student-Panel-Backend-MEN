@@ -33,7 +33,7 @@ const descriptionSchema = new mongoose.Schema({
   },
 });
 
-let DescriptionModel = mongoose.model('Description', descriptionSchema);
+let DescriptionModel = mongoose.model('TeacherDescription', descriptionSchema);
 module.exports = DescriptionModel;
 
 
