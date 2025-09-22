@@ -27,6 +27,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const authRouter = require("./App/routes/authRoute");
 app.use("/app", authRouter);
 
+const selectionRouter = require("./App/routes/SelectionRoute.js");
+app.use("/app", selectionRouter);
 
 
 //Tutor Router Rotes

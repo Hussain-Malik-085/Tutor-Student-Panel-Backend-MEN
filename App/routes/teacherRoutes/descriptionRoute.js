@@ -10,9 +10,9 @@ const auth = require('../../middlewares/auth');
 
 
 //------------------------------------------// Description Routes
-descriptionRouter.post("/CreateDescription", auth , DescriptionReceive);
+descriptionRouter.post("/createdescription", auth , DescriptionReceive);
 
-descriptionRouter.get("/GetDescription", auth, getDescriptionData);
+descriptionRouter.get("/getdescription", auth, getDescriptionData);
 
 
 module.exports = descriptionRouter;

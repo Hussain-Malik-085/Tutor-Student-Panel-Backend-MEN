@@ -2,25 +2,25 @@ let express = require ("express");
 const { usersInsert,userLogin,firebaseLogin} = require ("../controllers/authController");
 
 
-let UserRouter = express.Router();
+let authRouter = express.Router();
 
 
-const auth = require('../middlewares/auth');
+
 
 //------------------ Signup ------------------//
 
-UserRouter.post("/register", usersInsert);
+authRouter.post("/register", usersInsert);
 
 
 //------------------ Login ------------------//
 
-UserRouter.post("/login", userLogin);
+authRouter.post("/login", userLogin);
 
 
 //------------------ Firebase Login ------------------//
 
-UserRouter.post("/firebase-login", firebaseLogin);
+authRouter.post("/firebase-login", firebaseLogin);
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 
-module.exports = UserRouter;
+module.exports = authRouter;
