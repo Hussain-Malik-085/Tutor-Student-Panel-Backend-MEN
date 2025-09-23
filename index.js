@@ -57,7 +57,9 @@ const  AcademicInfoRoutes = require("./App/routes/studentRoutes/academicinfoRout
 app.use("/app/student", AcademicInfoRoutes )
 
 
-
+//Navigation Routes
+const teacherCard = require("./App/routes/TeacherNagivation/getTeacherCardRoutes.js")
+app.use("/app/navigation", teacherCard)
 
 // ✅ Connect to MongoDB and start the server
 mongoose.connect(process.env.DBURL)
