@@ -2,9 +2,10 @@
 const Users = require("../../Models/Users");
 const About = require("../../Models/teacherModels/AboutUsData")
 const Education = require("../../Models/teacherModels/EducationData");
+const Description = require("../../Models/teacherModels/DescriptionData")
 
 
-let getTeachersCardData = async (req, res) => {
+let getTeachersCardProfileData = async (req, res) => {
   try {
     // Step 1: find only teachers
     const teachers = await Users.find({ role: "tutor" });
@@ -14,13 +15,14 @@ let getTeachersCardData = async (req, res) => {
       teachers.map(async (tutor) => {
         const about = await About.findOne({ userId: tutor._id });
         const education = await Education.findOne({ userId: tutor._id });
+        const description = await Description.findOne({ userId: tutor._id  });
         
 
         return {
           id: tutor._id,
           email: tutor.Email,
           name: tutor.Username || "",
-
+         
           location: about?.location || "",
           language: about?.language || "",
           phone: about?.phoneNumber || "",
@@ -28,11 +30,13 @@ let getTeachersCardData = async (req, res) => {
            picture:about?.picture || "",
 
           degree: education?.degree || "",
-          specialization: education?.specialization || "",
-         
-         
-          
-          
+          specialization: education?.specialization ||  "",
+          university: education?.university || "",
+          startDate:  education?.startDate || "",
+           endDate:  education?.endDate || "",
+
+
+           introduction: description?.introduction|| "",
         };
       })
     );
@@ -45,6 +49,6 @@ let getTeachersCardData = async (req, res) => {
 };
 module.exports = {
    
-    getTeachersCardData
+   getTeachersCardProfileData
   
 }

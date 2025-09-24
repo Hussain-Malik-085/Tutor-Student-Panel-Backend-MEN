@@ -26,16 +26,19 @@ const educationSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  ndDate: {
-  type: Date,
-  validate: {
-    validator: function (value) {
-      if (!this.startDate || !value) return false;
-      return value >= this.startDate;
+  endDate: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: function (value) {
+        // Fixed validation: Only check if endDate is before startDate
+        // Allow future dates for endDate as education might be ongoing
+        if (!this.startDate || !value) return false;
+        return value >= this.startDate;
+      },
+      message: "End date cannot be earlier than start date.",
     },
-    message: "End date cannot be earlier than start date.",
   },
-},
   certificateUrl: {
     type: String, // file path ya cloud URL
     default: null,
