@@ -58,8 +58,14 @@ app.use("/app/student", AcademicInfoRoutes )
 
 
 //Navigation Routes
-const teacherCard = require("./App/routes/TeacherNagivation/getTeacherCardRoutes.js")
+const teacherCard = require("./App/routes/StudentNagivationRoutes/TeacherCardRoutes.js")
 app.use("/app/navigation", teacherCard)
+
+const StudentJobPost = require("./App/routes/StudentNagivationRoutes/JobPostRoutes.js")
+app.use("/app/navigation", StudentJobPost)
+
+
+
 
 // ✅ Connect to MongoDB and start the server
 mongoose.connect(process.env.DBURL)

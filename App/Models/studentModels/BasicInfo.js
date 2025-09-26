@@ -17,3 +17,4 @@ const BasicInfoSchema = new mongoose.Schema({
 module.exports = mongoose.model("StudentBasicInfo", BasicInfoSchema );
 
 
+ 

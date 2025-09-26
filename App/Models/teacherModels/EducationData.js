@@ -29,15 +29,7 @@ const educationSchema = new mongoose.Schema({
   endDate: {
     type: Date,
     required: true,
-    validate: {
-      validator: function (value) {
-        // Fixed validation: Only check if endDate is before startDate
-        // Allow future dates for endDate as education might be ongoing
-        if (!this.startDate || !value) return false;
-        return value >= this.startDate;
-      },
-      message: "End date cannot be earlier than start date.",
-    },
+    
   },
   certificateUrl: {
     type: String, // file path ya cloud URL
@@ -48,6 +40,21 @@ const educationSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+// Add a pre-save hook for validation instead of field-level validation
+educationSchema.pre('save', function(next) {
+  // Only validate if both dates exist
+  if (this.startDate && this.endDate) {
+    // Use getTime() for accurate comparison
+    if (this.endDate.getTime() < this.startDate.getTime()) {
+      const error = new Error('End date cannot be earlier than start date');
+      error.name = 'ValidationError';
+      return next(error);
+    }
+  }
+  next();
+});
+
 
 let EducationModel = mongoose.model('TeacherEducation', educationSchema);
 module.exports = EducationModel;
